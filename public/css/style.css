@@ -1,0 +1,396 @@
+/* --- RESET DASAR --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f7fa; /* Warna latar belakang abu muda */
+    color: #333;
+}
+
+/* --- LAYOUT UTAMA (SIDEBAR + KONTEN) --- */
+.app-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+    width: 260px;
+    background-color: #1e293b; /* Warna Biru Gelap Modern */
+    color: #fff;
+    position: fixed; /* Agar sidebar diam saat scroll */
+    height: 100vh;
+    left: 0;
+    top: 0;
+    border-right: 1px solid #334155;
+    z-index: 100;
+}
+
+.sidebar-header {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #334155;
+}
+
+.sidebar-header h1 {
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #60a5fa; /* Biru muda */
+}
+
+.sidebar-menu {
+    padding: 20px 0;
+}
+
+.sidebar-menu a {
+    display: block;
+    padding: 15px 25px;
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 15px;
+    transition: 0.3s;
+    border-left: 4px solid transparent;
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu a.active {
+    background-color: #334155;
+    color: #fff;
+    border-left: 4px solid #60a5fa;
+}
+
+.logout-form {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #334155;
+}
+
+.logout-btn {
+    width: 100%;
+    padding: 20px;
+    background: none;
+    border: none;
+    color: #f87171; /* Merah soft */
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #334155;
+}
+
+/* --- KONTEN UTAMA --- */
+.main-content {
+    flex: 1;
+    margin-left: 260px; /* PENTING: Geser konten agar tidak tertutup sidebar */
+    padding: 30px;
+}
+
+.header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.user-info {
+    font-size: 16px;
+    color: #64748b;
+}
+
+.user-info b {
+    color: #1e293b;
+}
+
+/* --- KOMPONEN DASHBOARD --- */
+.page-title {
+    font-size: 24px;
+    margin-bottom: 25px;
+    color: #1e293b;
+}
+
+/* Kartu Saldo (Grid 3 Kolom) */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 Kolom sama besar */
+    gap: 25px;
+    margin-bottom: 35px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.card-title {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.card-amount {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* Warna Khusus Uang */
+.text-green {
+    color: #16a34a;
+}
+.text-red {
+    color: #dc2626;
+}
+.text-blue {
+    color: #2563eb;
+}
+
+/* Tabel */
+.table-container {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 25px;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.custom-table th {
+    text-align: left;
+    padding: 15px;
+    border-bottom: 2px solid #f1f5f9;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.custom-table td {
+    padding: 15px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 15px;
+}
+
+.custom-table tr:last-child td {
+    border-bottom: none;
+}
+
+.badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.badge-income {
+    background-color: #dcfce7;
+    color: #166534;
+}
+.badge-expense {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+/* --- TAMBAHAN: GAYA FORMULIR (INPUT & TOMBOL) --- */
+.form-card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    margin-bottom: 30px;
+}
+
+.form-header {
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 10px;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end; /* Agar tombol sejajar dengan input */
+    flex-wrap: wrap;
+}
+
+.form-group {
+    flex: 1; /* Input akan melebar otomatis */
+    min-width: 200px;
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.form-input:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+
+.btn-submit {
+    background-color: #2563eb; /* Biru */
+    color: white;
+    padding: 11px 25px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    height: 42px; /* Samakan tinggi dengan input */
+}
+
+.btn-submit:hover {
+    background-color: #1d4ed8;
+}
+
+/* Warna Judul Halaman dinamis */
+.title-income {
+    color: #16a34a;
+} /* Hijau */
+.title-expense {
+    color: #dc2626;
+} /* Merah */
+
+/* --- TAMBAHAN: LAPORAN & GRAFIK --- */
+
+/* Kotak Filter */
+.filter-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-group label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #64748b;
+    margin-bottom: 5px;
+}
+
+.filter-input {
+    padding: 8px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.btn-filter {
+    background-color: #1e293b; /* Hitam kebiruan */
+    color: white;
+    padding: 9px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    height: 38px; /* Biar sejajar input */
+    align-self: flex-end; /* Turun ke bawah sejajar input */
+}
+
+.btn-reset {
+    color: #64748b;
+    text-decoration: none;
+    font-size: 14px;
+    align-self: flex-end;
+    margin-bottom: 10px;
+}
+
+.btn-reset:hover {
+    color: #dc2626;
+}
+
+/* Tata Letak Grafik & Ringkasan */
+.report-grid {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+    align-items: start;
+}
+
+.chart-card {
+    flex: 1; /* Lebar 1 bagian */
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.summary-card {
+    flex: 1; /* Lebar 1 bagian */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Kanvas Grafik */
+.chart-canvas-wrapper {
+    width: 300px; /* Batasi ukuran grafik agar tidak raksasa */
+    height: 300px;
+}
+.action-btn {
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-right: 5px;
+}
+.btn-edit {
+    background-color: #f59e0b;
+}
+.btn-delete {
+    background-color: #ef4444;
+}
