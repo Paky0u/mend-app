@@ -13,8 +13,16 @@ return new class extends Migration
     {
         Schema::create('wallets', function (Blueprint $table) {
             $table->id();
+            // 1. Tambahkan User ID (Agar dompet jadi milik pribadi)
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
+
             $table->string('name');
-            $table->boolean('is_active')->default(true); // Status Aktif/Nonaktif
+
+            // 2. Tambahkan Saldo Awal (Agar hitungan real)
+            // Kita pakai decimal biar presisi, default 0
+            $table->decimal('initial_balance', 15, 0)->default(0); 
+
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

@@ -7,9 +7,16 @@
             <div class="form-header">Tambah Rekening Baru</div>
             <form action="{{ route('wallet.store') }}" method="POST">
                 @csrf
+                
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label class="form-label">Nama Bank / E-Wallet</label>
                     <input type="text" name="name" class="form-input" placeholder="Contoh: SeaBank" required>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label class="form-label">Saldo Awal (Rp)</label>
+                    <input type="number" name="initial_balance" class="form-input" placeholder="0" required>
+                    <small style="color: #94a3b8; font-size: 11px; font-style: italic;">Saldo saat ini di rekening/dompet tersebut.</small>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
@@ -27,6 +34,7 @@
                     <tr>
                         <th>No</th>
                         <th>Nama Dompet</th>
+                        <th>Saldo Awal</th>
                         <th style="text-align: center;">Aksi</th>
                     </tr>
                 </thead>
@@ -40,6 +48,11 @@
                                 {{ $wallet->is_active ? 'Ditampilkan' : 'Disembunyikan' }}
                             </span>
                         </td>
+                        
+                        <td style="font-family: monospace;">
+                            Rp {{ number_format($wallet->initial_balance, 0, ',', '.') }}
+                        </td>
+
                         <td style="text-align: center;">
                             <a href="{{ route('wallet.edit', $wallet->id) }}" class="action-btn btn-edit">Edit</a>
                             <form action="{{ route('wallet.destroy', $wallet->id) }}" method="POST" onsubmit="return confirm('Yakin hapus?');" style="display:inline;">

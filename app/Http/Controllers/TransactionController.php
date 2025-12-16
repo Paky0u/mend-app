@@ -9,22 +9,41 @@ use Illuminate\Support\Facades\Auth;
 class TransactionController extends Controller
 {
     public function dashboard() {
-        $userId = Auth::id();
-        $pemasukan = Transaction::where('user_id', $userId)->where('type', 'income')->sum('amount');
-        $pengeluaran = Transaction::where('user_id', $userId)->where('type', 'expense')->sum('amount');
-        $saldo = $pemasukan - $pengeluaran;
-        
-        // Data Rincian Dompet
-        $wallets = Wallet::where('is_active', true)->get();
-        foreach($wallets as $w) {
-            $masuk = Transaction::where('user_id', $userId)->where('wallet_id', $w->id)->where('type', 'income')->sum('amount');
-            $keluar = Transaction::where('user_id', $userId)->where('wallet_id', $w->id)->where('type', 'expense')->sum('amount');
-            $w->saldo = $masuk - $keluar;
-        }
+    $userId = Auth::id();
+    
+    // 1. Ambil DOMPET AKTIF milik USER SENDIRI
+    $wallets = Wallet::where('user_id', $userId)->where('is_active', true)->get();
 
-        $recent = Transaction::where('user_id', $userId)->latest('date')->take(5)->with(['category', 'wallet'])->get();
-        return view('dashboard', compact('pemasukan', 'pengeluaran', 'saldo', 'recent', 'wallets'));
+    // Variable Total Gabungan Saldo Awal
+    $totalSaldoAwal = 0;
+    
+    // Looping untuk hitung per dompet
+    foreach($wallets as $w) {
+        $masuk = Transaction::where('user_id', $userId)->where('wallet_id', $w->id)->where('type', 'income')->sum('amount');
+        $keluar = Transaction::where('user_id', $userId)->where('wallet_id', $w->id)->where('type', 'expense')->sum('amount');
+        
+        // Rumus Per Dompet
+        $w->saldo = $w->initial_balance + $masuk - $keluar;
+        
+        // Tambahkan ke total global
+        $totalSaldoAwal += $w->initial_balance;
     }
+
+    // --- PERBAIKAN DI SINI ---
+    // Gunakan nama variabel '$pemasukan' dan '$pengeluaran' (Bukan $total...)
+    // Agar cocok dengan perintah compact di bawah.
+    
+    $pemasukan = Transaction::where('user_id', $userId)->where('type', 'income')->sum('amount');
+    $pengeluaran = Transaction::where('user_id', $userId)->where('type', 'expense')->sum('amount');
+    
+    // Rumus Saldo Total = Saldo Awal + Pemasukan - Pengeluaran
+    $saldo = $totalSaldoAwal + $pemasukan - $pengeluaran;
+
+    $recent = Transaction::where('user_id', $userId)->latest('date')->take(5)->with(['category', 'wallet'])->get();
+
+    // Sekarang variabel $pemasukan dan $pengeluaran sudah ada, jadi compact tidak akan error lagi.
+    return view('dashboard', compact('pemasukan', 'pengeluaran', 'saldo', 'recent', 'wallets'));
+}
 
     public function index($type) {
         $transactions = Transaction::where('user_id', Auth::id())->where('type', $type)->with(['category', 'wallet'])->latest('date')->get();
@@ -33,7 +52,7 @@ class TransactionController extends Controller
             $q->where('user_id', Auth::id())->orWhereNull('user_id');
         })->get();
         
-        $wallets = Wallet::where('is_active', true)->get();
+        $wallets = Wallet::where('user_id', Auth::id())->where('is_active', true)->get();
 
         return view('transactions.index', compact('transactions', 'type', 'categories', 'wallets'));
     }
@@ -56,7 +75,7 @@ class TransactionController extends Controller
         $categories = Category::where('type', $transaction->type)->where(function($q) {
             $q->where('user_id', Auth::id())->orWhereNull('user_id');
         })->get();
-        $wallets = Wallet::all();
+        $wallets = Wallet::where('user_id', Auth::id())->get();
         return view('transactions.edit', compact('transaction', 'categories', 'wallets'));
     }
 

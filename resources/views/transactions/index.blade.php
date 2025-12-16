@@ -23,6 +23,8 @@
                 <div class="form-group">
                     <label class="form-label">Dompet / Rekening</label>
                     <select name="wallet_id" class="form-input" required>
+                        <option value="">-- Pilih --</option> 
+                        
                         @foreach($wallets as $wallet)
                             <option value="{{ $wallet->id }}">{{ $wallet->name }}</option>
                         @endforeach

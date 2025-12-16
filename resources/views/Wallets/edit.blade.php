@@ -13,9 +13,15 @@
                 <input type="text" name="name" value="{{ $wallet->name }}" class="form-input" required>
             </div>
 
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label class="form-label">Saldo Awal (Rp)</label>
+                <input type="number" name="initial_balance" value="{{ $wallet->initial_balance }}" class="form-input" required>
+                <small style="color: #94a3b8; font-size: 11px;">Hanya ubah jika kamu salah memasukkan saldo awal sebelumnya.</small>
+            </div>
+
             <div class="form-group" style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-                <input type="checkbox" name="is_active" id="activeCheck" value="1" {{ $wallet->is_active ? 'checked' : '' }} style="width: 18px; height: 18px;">
-                <label for="activeCheck">Tampilkan di Dashboard & Pilihan?</label>
+                <input type="checkbox" name="is_active" id="activeCheck" value="1" {{ $wallet->is_active ? 'checked' : '' }} style="width: 18px; height: 18px; cursor: pointer;">
+                <label for="activeCheck" style="cursor: pointer;">Tampilkan di Dashboard & Pilihan?</label>
             </div>
 
             <button type="submit" class="btn-submit" style="background-color: #f59e0b;">Update</button>
