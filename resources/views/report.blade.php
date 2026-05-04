@@ -12,6 +12,7 @@
         </div>
         <button type="submit" class="btn-filter">Tampilkan</button>
         <a href="{{ route('laporan') }}" class="btn-reset">Reset</a>
+        <a href="{{ route('laporan.export', request()->query()) }}" class="btn-filter" style="background-color: #10b981; border-color: #10b981; text-decoration: none; display: inline-flex; align-items: center;">📥 Export Excel</a>
     </form>
 
     @if($transactions->count() > 0)

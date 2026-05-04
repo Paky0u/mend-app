@@ -58,6 +58,28 @@ class TransactionController extends Controller
     }
 
     public function store(Request $request) {
+        $attachmentPath = null;
+        if ($request->hasFile('attachment')) {
+            $attachmentPath = $request->file('attachment')->store('receipts', 'public');
+        }
+
+        $isRecurring = $request->has('is_recurring');
+        $recurringInterval = $isRecurring ? $request->recurring_interval : null;
+        $nextRecurringDate = null;
+
+        if ($isRecurring && $recurringInterval) {
+            $date = \Carbon\Carbon::parse($request->date);
+            if ($recurringInterval == 'daily') {
+                $nextRecurringDate = $date->addDay()->format('Y-m-d');
+            } elseif ($recurringInterval == 'weekly') {
+                $nextRecurringDate = $date->addWeek()->format('Y-m-d');
+            } elseif ($recurringInterval == 'monthly') {
+                $nextRecurringDate = $date->addMonth()->format('Y-m-d');
+            } elseif ($recurringInterval == 'yearly') {
+                $nextRecurringDate = $date->addYear()->format('Y-m-d');
+            }
+        }
+
         Transaction::create([
             'user_id' => Auth::id(),
             'type' => $request->type,
@@ -66,6 +88,10 @@ class TransactionController extends Controller
             'date' => $request->date,
             'category_id' => $request->category_id,
             'wallet_id' => $request->wallet_id,
+            'attachment' => $attachmentPath,
+            'is_recurring' => $isRecurring,
+            'recurring_interval' => $recurringInterval,
+            'next_recurring_date' => $nextRecurringDate,
         ]);
         return back()->with('success', 'Disimpan!');
     }
@@ -80,7 +106,36 @@ class TransactionController extends Controller
     }
 
     public function update(Request $request, $id) {
-        Transaction::where('user_id', Auth::id())->findOrFail($id)->update($request->all());
+        $transaction = Transaction::where('user_id', Auth::id())->findOrFail($id);
+        
+        $data = $request->except(['attachment']);
+        
+        if ($request->hasFile('attachment')) {
+            if ($transaction->attachment) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($transaction->attachment);
+            }
+            $data['attachment'] = $request->file('attachment')->store('receipts', 'public');
+        }
+
+        $data['is_recurring'] = $request->has('is_recurring');
+        $data['recurring_interval'] = $data['is_recurring'] ? $request->recurring_interval : null;
+        
+        if ($data['is_recurring'] && $data['recurring_interval']) {
+            $date = \Carbon\Carbon::parse($request->date ?? $transaction->date);
+            if ($data['recurring_interval'] == 'daily') {
+                $data['next_recurring_date'] = $date->addDay()->format('Y-m-d');
+            } elseif ($data['recurring_interval'] == 'weekly') {
+                $data['next_recurring_date'] = $date->addWeek()->format('Y-m-d');
+            } elseif ($data['recurring_interval'] == 'monthly') {
+                $data['next_recurring_date'] = $date->addMonth()->format('Y-m-d');
+            } elseif ($data['recurring_interval'] == 'yearly') {
+                $data['next_recurring_date'] = $date->addYear()->format('Y-m-d');
+            }
+        } else {
+            $data['next_recurring_date'] = null;
+        }
+
+        $transaction->update($data);
         return redirect()->route($request->type == 'income' ? 'pemasukan' : 'pengeluaran');
     }
 
@@ -124,5 +179,18 @@ class TransactionController extends Controller
             'incomePie',  // Kirim data grafik pemasukan
             'expensePie'  // Kirim data grafik pengeluaran
         ));
+    }
+
+    public function export(Request $request)
+    {
+        $query = Transaction::where('user_id', Auth::id());
+
+        if ($request->start_date && $request->end_date) {
+            $query->whereBetween('date', [$request->start_date, $request->end_date]);
+        }
+
+        $transactions = $query->with(['category', 'wallet'])->orderBy('date', 'desc')->get();
+
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\TransactionsExport($transactions), 'laporan_keuangan.xlsx');
     }
 }

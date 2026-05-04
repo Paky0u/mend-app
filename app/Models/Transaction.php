@@ -16,7 +16,11 @@ class Transaction extends Model
         'name', 
         'type', 
         'amount', 
-        'date'
+        'date',
+        'attachment',
+        'is_recurring',
+        'recurring_interval',
+        'next_recurring_date'
     ];
 
     public function user()

@@ -32,4 +32,5 @@ Route::delete('/transaksi/{id}', [TransactionController::class, 'destroy'])->nam
 
 // Laporan
 Route::get('/laporan', [TransactionController::class, 'laporan'])->name('laporan');
+Route::get('/laporan/export', [TransactionController::class, 'export'])->name('laporan.export');
 require __DIR__.'/auth.php';
