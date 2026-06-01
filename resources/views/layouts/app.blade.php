@@ -39,6 +39,10 @@
                 <a href="{{ route('laporan') }}" class="{{ request()->routeIs('laporan') ? 'active' : '' }}">
                     Laporan
                 </a>
+                
+                <a href="{{ route('profile.edit') }}" class="{{ request()->routeIs('profile.edit') ? 'active' : '' }}">
+                    Profil Saya
+                </a>
             </nav>
 
             <form method="POST" action="{{ route('logout') }}" class="logout-form">
