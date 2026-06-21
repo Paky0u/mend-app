@@ -5,6 +5,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\ProfileController;
 
+Route::redirect('/', '/login');
+
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [TransactionController::class, 'dashboard'])->name('dashboard');
 
@@ -38,6 +40,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Premium
+    Route::get('/premium', [App\Http\Controllers\PremiumController::class, 'index'])->name('premium.index');
+    Route::post('/premium/checkout', [App\Http\Controllers\PremiumController::class, 'checkout'])->name('premium.checkout');
+    Route::post('/premium/cancel', [App\Http\Controllers\PremiumController::class, 'cancel'])->name('premium.cancel');
+    Route::post('/premium/success', [App\Http\Controllers\PremiumController::class, 'success'])->name('premium.success');
 });
+
+// Midtrans Webhook Callback
+Route::post('/midtrans/callback', [App\Http\Controllers\PremiumController::class, 'callback']);
 
 require __DIR__.'/auth.php';

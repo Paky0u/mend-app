@@ -79,6 +79,29 @@
 
     </div>
 
+    @if(Auth::user()->is_premium)
+    <!-- KARTU BATALKAN PREMIUM (UNTUK DEMO) -->
+    <div class="form-card" style="border: 1px solid #fde68a; background-color: #fffbeb; max-width: 100%; margin-bottom: 30px;">
+        <div class="form-header" style="color: #d97706; border-bottom: 1px solid #fef3c7;">Mode Demo: Batalkan Premium</div>
+        <div style="display: flex; gap: 20px; align-items: start; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 300px;">
+                <p style="font-size: 14px; color: #b45309; line-height: 1.6; margin-bottom: 15px;">
+                    Tombol ini hanya untuk keperluan <b>Presentasi/Demo</b>. Mengklik tombol ini akan mereset status akun Anda kembali menjadi Non-Premium sehingga iklan akan kembali muncul, dan Anda bisa mendemonstrasikan ulang fitur Upgrade Premium.
+                </p>
+            </div>
+            
+            <div style="flex: 1; min-width: 300px;">
+                <form method="post" action="{{ route('premium.cancel') }}" onsubmit="return confirm('Batalkan status Premium untuk keperluan demo?');">
+                    @csrf
+                    <button type="submit" class="btn-submit" style="background-color: #d97706; color: white; width: 100%; border: none;">
+                        Batalkan Premium (Reset Demo)
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <!-- KARTU HAPUS AKUN -->
     <div class="form-card" style="border: 1px solid #fecaca; background-color: #fff5f5; max-width: 100%;">
         <div class="form-header" style="color: #dc2626; border-bottom: 1px solid #fee2e2;">Hapus Akun Permanen</div>
